@@ -1,7 +1,44 @@
-import { useState } from "react";
+import { useState, useEffect, useRef } from "react";
 import { Link, useNavigate } from "react-router-dom";
 
 const API_URL = "https://vanguard-ai.fastapicloud.dev";
+const GOOGLE_CLIENT_ID = "1007512006670-t9v0b1q7a8qrk12v5mimsgdrfl3m931o.apps.googleusercontent.com";
+
+function GoogleLoginButton({ onLogin, navigate }) {
+  const buttonRef = useRef(null);
+
+  useEffect(() => {
+    async function handleGoogleResponse(response) {
+      try {
+        const res = await fetch(`${API_URL}/login/google`, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ credential: response.credential }),
+        });
+        const data = await res.json();
+        if (!res.ok) throw new Error(data.detail || "Google login failed");
+        onLogin(data.access_token);
+        navigate("/dashboard");
+      } catch (err) {
+        alert(err.message);
+      }
+    }
+
+    if (window.google && buttonRef.current) {
+      window.google.accounts.id.initialize({
+        client_id: GOOGLE_CLIENT_ID,
+        callback: handleGoogleResponse,
+      });
+      window.google.accounts.id.renderButton(buttonRef.current, {
+        theme: "outline",
+        size: "large",
+        width: 350,
+      });
+    }
+  }, []);
+
+  return <div ref={buttonRef} className="flex justify-center my-4" />;
+}
 
 export default function LoginPage({ onLogin }) {
   const navigate = useNavigate();
@@ -69,6 +106,14 @@ export default function LoginPage({ onLogin }) {
             {loading ? "Logging in..." : "Log in"}
           </button>
         </form>
+
+        <div className="flex items-center gap-3 my-4">
+          <div className="flex-1 h-px bg-black/10" />
+          <span className="text-xs text-slate">OR</span>
+          <div className="flex-1 h-px bg-black/10" />
+        </div>
+        <GoogleLoginButton onLogin={onLogin} navigate={navigate} />
+
         <p className="text-center text-sm text-slate mt-6">
           Don't have an account? <Link to="/register" className="text-emerald font-bold">Register</Link>
         </p>
