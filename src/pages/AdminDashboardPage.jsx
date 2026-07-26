@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import AdminSidebar from "../components/AdminSidebar";
 
-const API_URL = "http://127.0.0.1:8000";
+const API_URL = "https://vanguard-ai.fastapicloud.dev";
 
 export default function AdminDashboardPage({ adminToken, onAdminLogout }) {
   const [stats, setStats] = useState(null);
@@ -166,9 +166,8 @@ export default function AdminDashboardPage({ adminToken, onAdminLogout }) {
                     <td className="px-5 py-3 text-slate">{u.org_name || "—"}</td>
                     <td className="px-5 py-3">
                       <span
-                        className={`px-2 py-1 rounded text-xs font-bold ${
-                          u.role === "admin" ? "bg-gold text-white" : "bg-emerald-pale text-emerald"
-                        }`}
+                        className={`px-2 py-1 rounded text-xs font-bold ${u.role === "admin" ? "bg-gold text-white" : "bg-emerald-pale text-emerald"
+                          }`}
                       >
                         {u.role}
                       </span>

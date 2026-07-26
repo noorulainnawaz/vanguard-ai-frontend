@@ -2,7 +2,7 @@ import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import PasswordStrengthMeter from "../components/PasswordStrengthMeter";
 
-const API_URL = "http://127.0.0.1:8000";
+const API_URL = "https://vanguard-ai.fastapicloud.dev";
 
 export default function RegisterPage({ onLogin }) {
   const navigate = useNavigate();
